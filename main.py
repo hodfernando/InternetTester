@@ -67,21 +67,12 @@ def run_speedtest(num_tests, interval_minutes, num_rounds, server):
 
 def create_dashboard(results):
     plt.figure(figsize=(10, 6))
-    sns.lineplot(data=results, x='Timestamp', y='Download_Speed_Mbps', label='Download Speed (Mbps)', errorbar=None)
-    sns.lineplot(data=results, x='Timestamp', y='Upload_Speed_Mbps', label='Upload Speed (Mbps)', errorbar=None)
-    sns.lineplot(data=results, x='Timestamp', y='Ping_ms', label='Ping (ms)', errorbar=None)
-
-    # Calculando médias
-    avg_download_speed = results['Download_Speed_Mbps'].mean()
-    avg_upload_speed = results['Upload_Speed_Mbps'].mean()
-    avg_ping = results['Ping_ms'].mean()
-
-    # Adicionando informações sobre as médias no gráfico
-    plt.text(results.iloc[-1]['Timestamp'], avg_download_speed, f'Avg Download: {avg_download_speed:.2f} Mbps',
-             ha='right', fontsize=12)
-    plt.text(results.iloc[-1]['Timestamp'], avg_upload_speed, f'Avg Upload: {avg_upload_speed:.2f} Mbps', ha='right',
-             fontsize=12)
-    plt.text(results.iloc[-1]['Timestamp'], avg_ping, f'Avg Ping: {avg_ping:.2f} ms', ha='right', fontsize=12)
+    sns.lineplot(data=results, x='Timestamp', y='Download_Speed_Mbps',
+                 label=f'Download Speed (Avg: {results["Download_Speed_Mbps"].mean():.2f} Mbps)', errorbar=None)
+    sns.lineplot(data=results, x='Timestamp', y='Upload_Speed_Mbps',
+                 label=f'Upload Speed (Avg: {results["Upload_Speed_Mbps"].mean():.2f} Mbps)', errorbar=None)
+    sns.lineplot(data=results, x='Timestamp', y='Ping_ms', label=f'Ping (Avg: {results["Ping_ms"].mean():.2f} ms)',
+                 errorbar=None)
 
     # Ajustando os parâmetros para deixar as letras maiores
     plt.xlabel('Timestamp', fontsize=14)
