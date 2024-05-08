@@ -32,7 +32,7 @@ def choose_server(servers):
 
 
 def run_speedtest(num_tests, interval_minutes, num_rounds, server):
-    results = pd.DataFrame(columns=['Timestamp', 'Round', 'Download_Speed_Mbps', 'Upload_Speed_Mbps', 'Ping_ms'])
+    results = pd.DataFrame(columns=['Round', 'Timestamp', 'Download_Speed_Mbps', 'Upload_Speed_Mbps', 'Ping_ms'])
 
     st = speedtest.Speedtest()
     st.get_servers().get(server)  # Selecionando o servidor
@@ -44,18 +44,18 @@ def run_speedtest(num_tests, interval_minutes, num_rounds, server):
             upload_speed = st.upload() / 1000000  # em Mbps
             ping = st.results.ping  # em ms
 
-            results = results._append({'Timestamp': timestamp, 'Round': round,
-                                      'Download_Speed_Mbps': download_speed,
-                                      'Upload_Speed_Mbps': upload_speed,
-                                      'Ping_ms': ping}, ignore_index=True)
+            results = results._append({'Round': round, 'Timestamp': timestamp,
+                                       'Download_Speed_Mbps': download_speed,
+                                       'Upload_Speed_Mbps': upload_speed,
+                                       'Ping_ms': ping}, ignore_index=True)
             time.sleep(1)  # pausa de 1 segundo entre os testes
-
-        # Salvar resultados em CSV a cada rodada
-        results.to_csv(f'results_round_{round}.csv', index=False)
 
         if round < num_rounds:
             print(f"Rodada {round} concluída. Próxima rodada em {interval_minutes} minutos...")
             time.sleep(interval_minutes * 60)  # converter minutos para segundos
+
+    # Salvar resultados em CSV a cada rodada
+    results.to_csv('results.csv', index=False)
 
     return results
 
