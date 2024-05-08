@@ -80,9 +80,6 @@ def create_dashboard(results):
     plt.title('Internet Speed Test Results', fontsize=16)
     plt.legend(fontsize=12)
     plt.xticks(rotation=45)
-
-    # Definindo intervalo de ticks personalizado (por exemplo, a cada 30 minutos)
-    plt.xticks(pd.date_range(start=results['Timestamp'].min(), end=results['Timestamp'].max(), freq='30T'))
     plt.tight_layout()
     plt.show()
 
