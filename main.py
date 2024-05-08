@@ -81,8 +81,8 @@ def create_dashboard(results):
     plt.legend(fontsize=24)
     plt.xticks(rotation=45)
     plt.tight_layout()
-    plt.show()
     plt.savefig('dashboard.png', dpi=300)
+    plt.show()
 
 
 if __name__ == "__main__":
