@@ -66,7 +66,7 @@ def run_speedtest(num_tests, interval_minutes, num_rounds, server):
 
 
 def create_dashboard(results):
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(16, 8))
     sns.lineplot(data=results, x='Timestamp', y='Download_Speed_Mbps',
                  label=f'Download Speed (Avg: {results["Download_Speed_Mbps"].mean():.2f} Mbps)', errorbar=None)
     sns.lineplot(data=results, x='Timestamp', y='Upload_Speed_Mbps',
@@ -80,6 +80,9 @@ def create_dashboard(results):
     plt.title('Internet Speed Test Results', fontsize=16)
     plt.legend(fontsize=12)
     plt.xticks(rotation=45)
+
+    # Definindo intervalo de ticks personalizado (por exemplo, a cada 30 minutos)
+    plt.xticks(pd.date_range(start=results['Timestamp'].min(), end=results['Timestamp'].max(), freq='30T'))
     plt.tight_layout()
     plt.show()
 
