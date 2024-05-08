@@ -78,14 +78,16 @@ def create_dashboard(results):
 
     # Adicionando informações sobre as médias no gráfico
     plt.text(results.iloc[-1]['Timestamp'], avg_download_speed, f'Avg Download: {avg_download_speed:.2f} Mbps',
-             ha='right')
-    plt.text(results.iloc[-1]['Timestamp'], avg_upload_speed, f'Avg Upload: {avg_upload_speed:.2f} Mbps', ha='right')
-    plt.text(results.iloc[-1]['Timestamp'], avg_ping, f'Avg Ping: {avg_ping:.2f} ms', ha='right')
+             ha='right', fontsize=12)
+    plt.text(results.iloc[-1]['Timestamp'], avg_upload_speed, f'Avg Upload: {avg_upload_speed:.2f} Mbps', ha='right',
+             fontsize=12)
+    plt.text(results.iloc[-1]['Timestamp'], avg_ping, f'Avg Ping: {avg_ping:.2f} ms', ha='right', fontsize=12)
 
-    plt.xlabel('Timestamp')
-    plt.ylabel('Speed/Ping')
-    plt.title('Internet Speed Test Results')
-    plt.legend()
+    # Ajustando os parâmetros para deixar as letras maiores
+    plt.xlabel('Timestamp', fontsize=14)
+    plt.ylabel('Speed/Ping', fontsize=14)
+    plt.title('Internet Speed Test Results', fontsize=16)
+    plt.legend(fontsize=12)
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.show()
