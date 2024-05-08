@@ -1,5 +1,6 @@
 import speedtest
 import pandas as pd
+import seaborn as sns
 import matplotlib.pyplot as plt
 from datetime import datetime
 import time
@@ -62,9 +63,21 @@ def run_speedtest(num_tests, interval_minutes, num_rounds, server):
 
 def create_dashboard(results):
     plt.figure(figsize=(10, 6))
-    plt.plot(results['Timestamp'], results['Download_Speed_Mbps'], label='Download Speed (Mbps)')
-    plt.plot(results['Timestamp'], results['Upload_Speed_Mbps'], label='Upload Speed (Mbps)')
-    plt.plot(results['Timestamp'], results['Ping_ms'], label='Ping (ms)')
+    sns.lineplot(data=results, x='Timestamp', y='Download_Speed_Mbps', label='Download Speed (Mbps)', ci=None)
+    sns.lineplot(data=results, x='Timestamp', y='Upload_Speed_Mbps', label='Upload Speed (Mbps)', ci=None)
+    sns.lineplot(data=results, x='Timestamp', y='Ping_ms', label='Ping (ms)', ci=None)
+
+    # Calculando médias
+    avg_download_speed = results['Download_Speed_Mbps'].mean()
+    avg_upload_speed = results['Upload_Speed_Mbps'].mean()
+    avg_ping = results['Ping_ms'].mean()
+
+    # Adicionando informações sobre as médias no gráfico
+    plt.text(results.iloc[-1]['Timestamp'], avg_download_speed, f'Avg Download: {avg_download_speed:.2f} Mbps',
+             ha='right')
+    plt.text(results.iloc[-1]['Timestamp'], avg_upload_speed, f'Avg Upload: {avg_upload_speed:.2f} Mbps', ha='right')
+    plt.text(results.iloc[-1]['Timestamp'], avg_ping, f'Avg Ping: {avg_ping:.2f} ms', ha='right')
+
     plt.xlabel('Timestamp')
     plt.ylabel('Speed/Ping')
     plt.title('Internet Speed Test Results')
