@@ -66,7 +66,7 @@ def run_speedtest(num_tests, interval_minutes, num_rounds, server):
 
 
 def create_dashboard(results):
-    plt.figure(figsize=(16, 8))
+    plt.figure(figsize=(30, 15))
     sns.lineplot(data=results, x='Timestamp', y='Download_Speed_Mbps',
                  label=f'Download Speed (Avg: {results["Download_Speed_Mbps"].mean():.2f} Mbps)', errorbar=None)
     sns.lineplot(data=results, x='Timestamp', y='Upload_Speed_Mbps',
@@ -75,13 +75,14 @@ def create_dashboard(results):
                  errorbar=None)
 
     # Ajustando os parâmetros para deixar as letras maiores
-    plt.xlabel('Timestamp', fontsize=14)
-    plt.ylabel('Speed/Ping', fontsize=14)
-    plt.title('Internet Speed Test Results', fontsize=16)
-    plt.legend(fontsize=12)
+    plt.xlabel('Timestamp', fontsize=18)
+    plt.ylabel('Speed/Ping', fontsize=18)
+    plt.title('Internet Speed Test Results', fontsize=24)
+    plt.legend(fontsize=24)
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.show()
+    plt.savefig('dashboard.png', dpi=300)
 
 
 if __name__ == "__main__":
