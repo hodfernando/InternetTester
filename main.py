@@ -55,7 +55,7 @@ def run_speedtest(num_tests, interval_minutes, num_rounds, server):
             time.sleep(interval_minutes * 60)  # converter minutos para segundos
 
     # Salvar resultados em CSV a cada rodada
-    results.to_csv('results.csv', index=False)
+    results.to_csv(f'results_{datetime.now().strftime('%Y-%m-%d %H-%M-%S')}.csv', index=False)
 
     return results
 
