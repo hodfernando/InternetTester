@@ -1,3 +1,4 @@
+import warnings
 import speedtest
 import pandas as pd
 import seaborn as sns
@@ -45,7 +46,10 @@ def run_speedtest(num_tests, interval_minutes, num_rounds, server):
             upload_speed = st.upload() / 1000000  # em Mbps
             ping = st.results.ping  # em ms
 
-            results = results._append({'Round': round, 'Timestamp': timestamp,
+            with warnings.catch_warnings():
+                # pandas 2.1.0 has a FutureWarning for concatenating DataFrames with Null entries
+                warnings.filterwarnings("ignore", category=FutureWarning)
+                results = results._append({'Round': round, 'Timestamp': timestamp,
                                        'Download_Speed_Mbps': download_speed,
                                        'Upload_Speed_Mbps': upload_speed,
                                        'Ping_ms': ping}, ignore_index=True)
@@ -63,9 +67,9 @@ def run_speedtest(num_tests, interval_minutes, num_rounds, server):
 
 def create_dashboard(results):
     plt.figure(figsize=(10, 6))
-    sns.lineplot(data=results, x='Timestamp', y='Download_Speed_Mbps', label='Download Speed (Mbps)', ci=None)
-    sns.lineplot(data=results, x='Timestamp', y='Upload_Speed_Mbps', label='Upload Speed (Mbps)', ci=None)
-    sns.lineplot(data=results, x='Timestamp', y='Ping_ms', label='Ping (ms)', ci=None)
+    sns.lineplot(data=results, x='Timestamp', y='Download_Speed_Mbps', label='Download Speed (Mbps)', errorbar=None)
+    sns.lineplot(data=results, x='Timestamp', y='Upload_Speed_Mbps', label='Upload Speed (Mbps)', errorbar=None)
+    sns.lineplot(data=results, x='Timestamp', y='Ping_ms', label='Ping (ms)', errorbar=None)
 
     # Calculando médias
     avg_download_speed = results['Download_Speed_Mbps'].mean()
