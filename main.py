@@ -34,25 +34,27 @@ def choose_server(servers):
 
 
 def run_speedtest(num_tests, interval_minutes, num_rounds, server):
-    results = pd.DataFrame(
-        columns=['Round', 'Timestamp', 'Download_Speed_Mbps', 'Upload_Speed_Mbps', 'Ping_ms', 'Latency'])
-
-    st = speedtest.Speedtest()
-    st.get_servers().get(server)  # Selecionando o servidor
+    results = pd.DataFrame(columns=['Client', 'Round', 'Timestamp', 'Download_Speed_Mbps', 'Upload_Speed_Mbps',
+                                    'Ping_ms', 'Latency'])
 
     for round in range(1, num_rounds + 1):
         for test in range(1, num_tests + 1):
             timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            res_dict = st.results.dict()
-            download_speed = str(res_dict['download'])[:2] + "." + str(res_dict['download'])[2:4]  # em Mbps
-            upload_speed = str(res_dict['upload'])[:2] + "." + str(res_dict['upload'])[2:4]  # em Mbps
+            st = speedtest.Speedtest()
+            st.get_servers().get(server)  # Selecionando o servidor
+            st.download()  # download speed
+            st.upload()  # upload speed
+            res_dict = st.results.dict()  # resultados em dicionário
+            download_speed = res_dict['download'] / 1000000  # em Mbps
+            upload_speed = res_dict['upload'] / 1000000  # em Mbps
             ping = res_dict['ping']  # em ms
-            latency = res_dict['server']['latency']
+            latency = res_dict['server']['latency']  # latency
+            client = res_dict['client']['isp']  # provedor de internet
 
             with warnings.catch_warnings():
                 # pandas 2.1.0 has a FutureWarning for concatenating DataFrames with Null entries
                 warnings.filterwarnings("ignore", category=FutureWarning)
-                results = results._append({'Round': round, 'Timestamp': timestamp,
+                results = results._append({'Client': client, 'Round': round, 'Timestamp': timestamp,
                                            'Download_Speed_Mbps': download_speed,
                                            'Upload_Speed_Mbps': upload_speed,
                                            'Ping_ms': ping, 'Latency': latency}, ignore_index=True)
@@ -82,7 +84,7 @@ def create_dashboard(results):
     # Ajustando os parâmetros para deixar as letras maiores
     plt.xlabel('Timestamp', fontsize=18)
     plt.ylabel('Speed/Ping', fontsize=18)
-    plt.title('Internet Speed Test Results', fontsize=24)
+    plt.title(f'Internet Speed Test - {results["Client"].unique()[0]} - Results', fontsize=24)
     plt.legend(fontsize=24)
     plt.xticks(rotation=45)
     plt.tight_layout()
