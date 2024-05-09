@@ -34,7 +34,8 @@ def choose_server(servers):
 
 
 def run_speedtest(num_tests, interval_minutes, num_rounds, server):
-    results = pd.DataFrame(columns=['Round', 'Timestamp', 'Download_Speed_Mbps', 'Upload_Speed_Mbps', 'Ping_ms'])
+    results = pd.DataFrame(
+        columns=['Round', 'Timestamp', 'Download_Speed_Mbps', 'Upload_Speed_Mbps', 'Ping_ms', 'Latency'])
 
     st = speedtest.Speedtest()
     st.get_servers().get(server)  # Selecionando o servidor
@@ -42,17 +43,19 @@ def run_speedtest(num_tests, interval_minutes, num_rounds, server):
     for round in range(1, num_rounds + 1):
         for test in range(1, num_tests + 1):
             timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            download_speed = st.download() / 1000000  # em Mbps
-            upload_speed = st.upload() / 1000000  # em Mbps
-            ping = st.results.ping  # em ms
+            res_dict = st.results.dict()
+            download_speed = str(res_dict['download'])[:2] + "." + str(res_dict['download'])[2:4]  # em Mbps
+            upload_speed = str(res_dict['upload'])[:2] + "." + str(res_dict['upload'])[2:4]  # em Mbps
+            ping = res_dict['ping']  # em ms
+            latency = res_dict['server']['latency']
 
             with warnings.catch_warnings():
                 # pandas 2.1.0 has a FutureWarning for concatenating DataFrames with Null entries
                 warnings.filterwarnings("ignore", category=FutureWarning)
                 results = results._append({'Round': round, 'Timestamp': timestamp,
-                                       'Download_Speed_Mbps': download_speed,
-                                       'Upload_Speed_Mbps': upload_speed,
-                                       'Ping_ms': ping}, ignore_index=True)
+                                           'Download_Speed_Mbps': download_speed,
+                                           'Upload_Speed_Mbps': upload_speed,
+                                           'Ping_ms': ping, 'Latency': latency}, ignore_index=True)
             time.sleep(1)  # pausa de 1 segundo entre os testes
 
         if round < num_rounds:
@@ -73,6 +76,8 @@ def create_dashboard(results):
                  label=f'Upload Speed (Avg: {results["Upload_Speed_Mbps"].mean():.2f} Mbps)', errorbar=None)
     sns.lineplot(data=results, x='Timestamp', y='Ping_ms', label=f'Ping (Avg: {results["Ping_ms"].mean():.2f} ms)',
                  errorbar=None)
+    sns.lineplot(data=results, x='Timestamp', y='Latency', label=f'Latency (Avg: {results["Latency"].mean():.2f})',
+                 errorbar=None)
 
     # Ajustando os parâmetros para deixar as letras maiores
     plt.xlabel('Timestamp', fontsize=18)
@@ -89,7 +94,7 @@ if __name__ == "__main__":
     servers = get_servers_list()
     server = choose_server(servers)
 
-    num_tests = int(input("Número de testes por rodada: "))
+    num_tests = 1  # int(input("Número de testes por rodada: "))
     interval_minutes = int(input("Intervalo de tempo entre as rodadas (minutos): "))
     num_rounds = int(input("Número de rodadas: "))
 
