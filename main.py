@@ -97,8 +97,8 @@ if __name__ == "__main__":
     server = choose_server(servers)
 
     num_tests = 1  # int(input("Número de testes por rodada: "))
-    interval_minutes = int(input("Intervalo de tempo entre as rodadas (minutos): "))
-    num_rounds = int(input("Número de rodadas: "))
+    interval_minutes = int(input("Intervalo de tempo entre testes (minutos): "))
+    num_rounds = int(input("Número de testes: "))
 
     print("Iniciando os testes...")
     results = run_speedtest(num_tests, interval_minutes, num_rounds, server)
