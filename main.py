@@ -86,9 +86,9 @@ def create_dashboard(results):
     plt.ylabel('Speed/Ping', fontsize=18)
     plt.title(f'Internet Speed Test - {results["Client"].unique()[0]} - Results', fontsize=24)
     plt.legend(fontsize=24)
-    plt.xticks(rotation=45)
+    plt.xticks(rotation=90)
     plt.tight_layout()
-    plt.savefig('dashboard.png', dpi=300)
+    plt.savefig(f'dashboard_{results["Client"].unique()[0]}_{datetime.now().strftime("%Y-%m-%d %H-%M-%S")}.png', dpi=300)
     plt.show()
 
 
