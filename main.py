@@ -37,6 +37,12 @@ def run_speedtest(num_tests, interval_minutes, num_rounds, server):
     results = pd.DataFrame(columns=['Client', 'Round', 'Timestamp', 'Download_Speed_Mbps', 'Upload_Speed_Mbps',
                                     'Ping_ms', 'Latency'])
 
+    download_speed = 0
+    upload_speed = 0
+    ping = 0
+    latency = 0
+    client = 0
+
     for round in range(1, num_rounds + 1):
         for test in range(1, num_tests + 1):
             timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -61,6 +67,7 @@ def run_speedtest(num_tests, interval_minutes, num_rounds, server):
             time.sleep(1)  # pausa de 1 segundo entre os testes
 
         if round < num_rounds:
+            print(f"Download: {download_speed:.2f} Mbps | Upload: {upload_speed:.2f} Mbps | Ping: {ping:.2f} ms | ")
             print(f"Rodada {round} concluída. Próxima rodada em {interval_minutes} minutos...")
             time.sleep(interval_minutes * 60)  # converter minutos para segundos
 
