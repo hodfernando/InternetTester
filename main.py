@@ -67,7 +67,8 @@ def run_speedtest(num_tests, interval_minutes, num_rounds, server):
             time.sleep(1)  # pausa de 1 segundo entre os testes
 
         if round < num_rounds:
-            print(f"Download: {download_speed:.2f} Mbps | Upload: {upload_speed:.2f} Mbps | Ping: {ping:.2f} ms | ")
+            print(f"Download: {download_speed:.2f} Mbps | Upload: {upload_speed:.2f} Mbps | Ping: {ping:.2f} ms | "
+                  f"Latency: {latency:.2f} | Cliente: {client} | Timestamp: {timestamp} | ")
             print(f"Rodada {round} concluída. Próxima rodada em {interval_minutes} minutos...")
             time.sleep(interval_minutes * 60)  # converter minutos para segundos
 
